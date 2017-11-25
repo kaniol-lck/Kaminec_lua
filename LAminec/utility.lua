@@ -46,3 +46,17 @@ function printTable( tbl , level, filteDefault)
 	end
 	print(indent_str .. "}")
 end
+
+function connect(list1, list2)
+
+	list3 = {}
+	
+	for i = 1, #list1 do
+		table.insert(list3, list1[i])
+	end
+	
+	for i = 1, #list2 do
+		table.insert(list3, list2[i])
+	end
+	return list3
+end

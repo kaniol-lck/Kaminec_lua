@@ -1,24 +1,11 @@
-require("lfs")
+require("LAminec.class")
 
-require("LAminec.gameJson")
-require("LAminec.JVMKiller")
-require("LAminec.nativesSolver")
-require("LAminec.info")
+require("LAminec.Game")
+require("LAminec.Profile")
+require("LAminec.JsonManager")
 
-local t = os.clock()
+profile = loadProfile()
 
-gameJson.fromFile(info.lastUsedVersion)
+game = Game.new(profile)
 
-local JVMArgs = table.concat(JVMArgs()," ")
-
-local after_cp = gameJson.after_cp()
-local mainClass = gameJson.mainClass()
-local gameArgs = gameJson.gameArgs()
-
-extractNatives(gameJson.extractList())
-
-local arg = [[start "" "]]..info.javaPath.."\" "..JVMArgs.." "..after_cp.." "..mainClass.." "..gameArgs
-
-print(os.clock() - t)
-
-os.execute(arg)
+game:start()
