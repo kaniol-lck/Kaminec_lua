@@ -48,8 +48,7 @@ function printTable( tbl , level, filteDefault)
 end
 
 function connect(list1, list2)
-
-	list3 = {}
+	local list3 = {}
 	
 	for i = 1, #list1 do
 		table.insert(list3, list1[i])
@@ -59,4 +58,13 @@ function connect(list1, list2)
 		table.insert(list3, list2[i])
 	end
 	return list3
+end
+
+function contains(t, v)
+	return t[v] ~= nil
+end
+
+function generateFileName(name)
+	local list = split(name, ":")
+	return string.gsub(list[1], "%.", "/").."/"..list[2].."/"..list[3].."/"..list[2].."-"..list[3]..".jar"
 end

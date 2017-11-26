@@ -28,22 +28,30 @@ end
 
 function JsonManager:getClassPaths()
 	
-	local filePaths = ""
+	local classPaths = {}
 	for k, c in pairs(self.json.libraries) do
-		local downloads = c.downloads
-		if downloads ~= nil then
-			local artifact = downloads.artifact
-			if artifact ~= nil then
-				local path = artifact.path
-				if path ~= nil then
-					filePaths = filePaths..info.corePath.."/libraries/"..path..";"
-				end
+		if not contains(c, "natives") then 
+			if contains(c, "downloads") and contains(c.downloads, "artifact") then
+				table.insert(classPaths, info.corePath.."/libraries/"..c.downloads.artifact.path)
+			else
+				table.insert(classPaths, info.corePath.."/libraries/"..generateFileName(c.name))
 			end
 		end
 	end
+	--genFileName
 	
-	local version = self.json.id
-	return filePaths..info.corePath.."/versions/"..version.."/"..version..".jar"
+	if contains(self.json, "inheritsFrom") then
+		local inheritedJson = JsonManager.new(self.json.inheritsFrom)
+		inheritedClassPaths = inheritedJson:getClassPaths()
+		for i = 1, #inheritedClassPaths do
+			table.insert(classPaths, inheritedClassPaths[i])
+		end
+	else
+		local version = self.json.id
+		table.insert(classPaths, info.corePath.."/versions/"..version.."/"..version..".jar")
+	end
+	
+	return classPaths
 end
 
 function JsonManager:getMainClass()
@@ -63,9 +71,15 @@ function JsonManager:getExtractList()
 
 	list = {}
 	for k, c in pairs(self.json.libraries) do
-		if c.natives ~= nil then
-			table.insert(list, info.corePath.."/libraries/"..c.downloads.classifiers["natives-windows"].path)
+		if contains(c, "natives") and contains(c.natives, "windows") then
+			key = string.gsub(c.natives.windows, "${arch}", 32)
+			table.insert(list, info.corePath.."/libraries/"..c.downloads.classifiers[key].path)
 		end
+	end
+	
+	if contains(self.json, "inheritsFrom") then
+		local inheritedJson = JsonManager.new(self.json.inheritsFrom)
+		connect(list, inheritedJson:getExtractList())
 	end
 	
 	return list
@@ -73,5 +87,10 @@ end
 
 function JsonManager:getAssetIndex()
 
-	return self.json.assets
+	if contains(self.json, "inheritsFrom") then
+		local inheritedJson = JsonManager.new(self.json.inheritsFrom)
+		return inheritedJson:getAssetIndex()
+	else
+		return self.json.assets
+	end
 end

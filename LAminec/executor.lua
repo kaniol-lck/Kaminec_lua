@@ -1,5 +1,5 @@
 function process(executable, args)
 	
-	str = executable.." \""..table.concat(args, "\" \"").."\""
+	str = "start \"\" ".."\""..executable.."\" \""..table.concat(args, "\" \"").."\""
 	os.execute(str)
 end

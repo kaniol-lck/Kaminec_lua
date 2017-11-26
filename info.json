@@ -1,8 +1,10 @@
 {
 	"mode":"offline",
 	"playerName":"Kaniol",
-	"javaPath":"D:/Kaminec_Lua/runtime/jre-x32/1.8.0_25/bin/javaw.exe",
-	"corePath":"D:/Kaminec_Lua/.minecraft",
+	"minMem":128,
+	"maxMem":4096,
+	"javaPath":"C:/Program Files (x86)/Minecraft/runtime/jre-x64/1.8.0_25/bin/javaw.exe",
+	"corePath":"C:/Users/37552/AppData/Roaming/.minecraft",
 	"gamePath":"D:/Kaminec_Lua/.minecraft",
-	"lastVersionId":"1.11.2"
+	"lastVersionId":"1.12.2-forge1.12.2-14.23.0.2491"
 }

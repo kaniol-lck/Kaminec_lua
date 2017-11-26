@@ -17,7 +17,7 @@ function Game:start()
 	
 	self:extractNatives()
 	startCode = self:getStartCode()
-		
+	
 	process(info.javaPath, startCode)
 end
 
@@ -28,17 +28,21 @@ end
 
 function Game:getJVMArgs()
 
-	return connect({
+	JVMArgs = {
 		"-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump",
 		"-XX:+UseG1GC",
         "-XX:-UseAdaptiveSizePolicy",
         "-XX:-OmitStackTraceInFastThrow",
-		"-Xmn128m",
-		"-Xmx1024m",
 		"-Djava.library.path="..lfs.currentdir().."/.minecraft/natives",
         "-Dfml.ignoreInvalidMinecraftCertificates=true",
-        "-Dfml.ignorePatchDiscrepancies=true",
-		"-cp"}, {self.jsonManager:getClassPaths()})
+        "-Dfml.ignorePatchDiscrepancies=true"}
+	
+	table.insert(JVMArgs, "-Xmn"..info.minMem.."m")
+	table.insert(JVMArgs, "-Xmx"..info.maxMem.."m")
+	table.insert(JVMArgs, "-cp")
+	table.insert(JVMArgs, table.concat(self.jsonManager:getClassPaths(), ";"))
+	
+	return JVMArgs
 end
 
 function Game:getGameArgs()
@@ -49,7 +53,7 @@ function Game:getGameArgs()
 		["${auth_player_name}"] = self.profile.playerName,
 		["${version_name}"] = self.profile.lastVersionId,
 		["${game_directory}"] = self.profile.gamePath,
-		["${assets_root}"] = self.profile.corePath--[[.. "/assets"]],
+		["${assets_root}"] = self.profile.corePath.. "/assets",
 		["${assets_index_name}"] = self.jsonManager:getAssetIndex(),
 		["${user_type}"] = "Legacy",
 		["${version_type}"] = "Kaminec Launcher",
