@@ -33,12 +33,12 @@ function Game:getJVMArgs()
 		"-XX:+UseG1GC",
         "-XX:-UseAdaptiveSizePolicy",
         "-XX:-OmitStackTraceInFastThrow",
-		"-Djava.library.path="..lfs.currentdir().."/.minecraft/natives",
+		string.format("-Djava.library.path=%s/natives", info.gamePath),
         "-Dfml.ignoreInvalidMinecraftCertificates=true",
         "-Dfml.ignorePatchDiscrepancies=true"}
 	
-	table.insert(JVMArgs, "-Xmn"..info.minMem.."m")
-	table.insert(JVMArgs, "-Xmx"..info.maxMem.."m")
+	table.insert(JVMArgs, string.format("-Xmn%dm", info.minMem))
+	table.insert(JVMArgs, string.format("-Xmx%dm", info.maxMem))
 	table.insert(JVMArgs, "-cp")
 	table.insert(JVMArgs, table.concat(self.jsonManager:getClassPaths(), ";"))
 	
@@ -70,7 +70,7 @@ end
 
 function Game:extractNatives()
 
-	for k, c in ipairs(self.jsonManager:getExtractList()) do 
-		os.execute("7za ".."x \""..c.."\" \"-o"..info.gamePath.."/natives/\"".." -aos > 7zlog.txt")
+	for k, c in ipairs(self.jsonManager:getExtractList()) do
+		os.execute(string.format([[start 7za x "%s" "-o%s/natives/" -aos > 7zlog.txt]], c, info.gamePath))
 	end
 end

@@ -31,11 +31,11 @@ function JsonManager:getClassPaths()
 	local classPaths = {}
 	for k, c in pairs(self.json.libraries) do
 		if not contains(c, "natives") then 
-			if contains(c, "downloads") and contains(c.downloads, "artifact") then
+			--[[if contains(c, "downloads") and contains(c.downloads, "artifact") then
 				table.insert(classPaths, info.corePath.."/libraries/"..c.downloads.artifact.path)
-			else
+			else]]
 				table.insert(classPaths, info.corePath.."/libraries/"..generateFileName(c.name))
-			end
+			--end
 		end
 	end
 	--genFileName
